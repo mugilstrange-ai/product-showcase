@@ -1,0 +1,69 @@
+name: Verify typed props and capture submission screenshots
+
+on:
+  push:
+    branches: [feature/typed-props]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Check strict TypeScript props
+        run: npm run typecheck
+      - name: Build the production storefront
+        run: npm run build
+      - name: Start the actual built Next.js server
+        run: |
+          npm run start > /tmp/product-showcase.log 2>&1 &
+          for i in $(seq 1 45); do
+            if curl -fsS http://localhost:3000/ >/dev/null; then exit 0; fi
+            sleep 2
+          done
+          cat /tmp/product-showcase.log
+          exit 1
+      - name: Check rendered greeting and both cards
+        run: |
+          curl -fsS http://localhost:3000/ -o /tmp/storefront.html
+          grep -q 'Hello, ' /tmp/storefront.html
+          grep -q 'Studio Keyboard' /tmp/storefront.html
+          grep -q 'Everyday Mouse' /tmp/storefront.html
+          grep -q 'In stock' /tmp/storefront.html
+          grep -q 'Sold out' /tmp/storefront.html
+      - name: Capture screenshot of real running app
+        run: |
+          mkdir -p proof
+          CHROME=$(command -v google-chrome || command -v chromium)
+          "$CHROME" --headless=new --no-sandbox --disable-dev-shm-usage --hide-scrollbars             --window-size=1440,1200 --virtual-time-budget=4500             --screenshot=proof/01-running-app.png "http://localhost:3000/"
+          test -s proof/01-running-app.png
+      - name: Capture screenshots of typed source files
+        run: |
+          python3 scripts/make-source-previews.py
+          CHROME=$(command -v google-chrome || command -v chromium)
+          for item in "02-ProductCard-code" "03-page-code"; do
+            "$CHROME" --headless=new --no-sandbox --disable-dev-shm-usage --hide-scrollbars               --allow-file-access-from-files --window-size=1440,1050               --screenshot="proof/$item.png" "file://$PWD/proof/$item.html"
+            test -s "proof/$item.png"
+          done
+      - name: Capture GitHub PR screenshot
+        if: github.event_name == 'pull_request'
+        run: |
+          CHROME=$(command -v google-chrome || command -v chromium)
+          "$CHROME" --headless=new --no-sandbox --disable-dev-shm-usage             --window-size=1500,1050 --virtual-time-budget=8000             --screenshot=proof/04-pull-request.png             "https://github.com/${{ github.repository }}/pull/${{ github.event.pull_request.number }}"
+          test -s proof/04-pull-request.png
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: typed-props-submission-screenshots
+          path: proof/*.png
+          retention-days: 30

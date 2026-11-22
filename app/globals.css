@@ -1,27 +1,15 @@
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  background: #f4f6fb;
-  color: #1a1a2e;
-}
-main {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 40px 20px;
-}
-.store h1 { color: #1f4e78; }
-.greeting { color: #7c5cff; }
-.cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
-.card {
-  background: #fff;
-  border: 1px solid #d8ddec;
-  border-radius: 14px;
-  padding: 16px 18px;
-  box-shadow: 0 4px 14px #1a1a2e0d;
-}
-.card h3 { margin: 0 0 6px; color: #1f4e78; }
-.card p { margin: 4px 0; }
-.price { font-weight: 700; color: #12a150; }
-.todo { color: #c0353a; font-style: italic; }
-@media (max-width: 560px) { .cards { grid-template-columns: 1fr; } }
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap');
+:root { --ink:#ebece9; --bg:#0f1210; --card:#191d1a; --muted:#9ca49b; --lime:#d7f48a; --line:#323832; }
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:'DM Sans',Arial,sans-serif}a{color:inherit;text-decoration:none}
+.store{max-width:1500px;margin:0 auto;padding:0 5.3%}.site-header{min-height:88px;display:flex;align-items:center;gap:28px;border-bottom:1px solid var(--line)}.brand{display:inline-flex;align-items:center;gap:12px;font-size:20px;font-weight:800;letter-spacing:-.055em;white-space:nowrap}.brand-icon{color:var(--lime);font-size:32px;font-weight:400;line-height:.6}.brand-light{font-weight:400;margin-left:4px}
+.header-edition,.header-availability{font-size:10px;font-weight:700;letter-spacing:.19em;color:var(--muted)}.header-edition{margin-left:auto}.header-availability{margin-left:3.5%}.header-availability span{color:var(--lime);font-size:8px;vertical-align:1px;margin-right:5px}
+.hero{display:grid;grid-template-columns:1.05fr .95fr;min-height:455px;border-bottom:1px solid var(--line)}.hero-copy{display:flex;flex-direction:column;align-items:start;padding:58px 20px 44px 0}.eyebrow{font-size:10px;font-weight:800;letter-spacing:.22em;color:var(--lime);margin:0 0 28px}.eyebrow-line{display:inline-block;width:22px;border-top:1px solid var(--lime);margin-right:9px;vertical-align:3px}h1,h2,h3,p{margin-top:0}h1,h2{font-family:'DM Serif Display',Georgia,serif;font-weight:400}h1{font-size:clamp(58px,6vw,94px);letter-spacing:-.04em;line-height:.99;margin-bottom:21px}h1 em,h2 em{font-weight:400;color:var(--lime)}.hero-subtitle{max-width:480px;font-size:14px;line-height:1.8;color:#aeb5ad}
+.greeting{margin-top:27px;background:#202920;border:1px solid #3b4b34;border-radius:12px;display:grid;grid-template-columns:10px auto;column-gap:11px;padding:16px 20px;align-items:center;max-width:450px}.greeting-dot{display:block;width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 15px #d7f48970}.greeting h2{font:700 16px 'DM Sans',sans-serif;margin:0 0 4px}.greeting h2 span{color:var(--lime)}.greeting p{grid-column:2;font-size:11px;color:#a6b1a2;margin:0;line-height:1.55}
+.hero-sculpture{margin:26px 0 26px 15px;background:#c3c9b0;border-radius:4px;min-height:400px;position:relative;display:grid;place-items:center;overflow:hidden}.sculpture-ring{position:absolute;width:61%;aspect-ratio:1;border-radius:50%;border:2px solid #e8e9dcaa}.hero-sculpture>span{color:#6c8069;font-size:clamp(200px,23vw,338px);line-height:1;text-shadow:16px 19px 16px #34412f35;transform:rotate(-17deg)}.hero-sculpture p{position:absolute;bottom:17px;left:22px;font-size:9px;letter-spacing:.17em;color:#3d523e;font-weight:800}
+.collection{padding:55px 0 72px}.section-header{display:flex;justify-content:space-between;align-items:end;gap:14px;margin-bottom:25px}.section-header .eyebrow{margin-bottom:12px}.section-header h2{font-size:clamp(35px,3.5vw,50px);line-height:1.1;margin:0}.item-count{font-size:10px;color:var(--muted);letter-spacing:.19em;white-space:nowrap}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+.card{min-width:0;background:var(--card);border:1px solid #343a34;overflow:hidden;border-radius:7px}.card-art{background:#d4dbbf;height:190px;overflow:hidden;position:relative;display:grid;place-items:center}.card:nth-child(2) .card-art{background:#d6cfc1}.art-orbit{position:absolute;border:1px solid #7a937c73;border-radius:50%}.art-orbit-one{width:200px;height:200px}.art-orbit-two{width:280px;height:280px}.art-core{font-size:142px;color:#839b7f;text-shadow:7px 15px 13px #4d5d4430;transform:rotate(-12deg);line-height:1}.card:nth-child(2) .art-core{color:#ad9786;transform:rotate(17deg)}.art-label{position:absolute;top:16px;left:20px;font-size:9px;color:#486049;letter-spacing:.17em;font-weight:700}
+.card-content{padding:22px 25px 21px}.card-topline{display:flex;justify-content:space-between;gap:10px;align-items:center}.card-kicker{font-size:10px;color:var(--muted);letter-spacing:.2em;font-weight:700}.stock{font-size:10px;padding:7px 9px;border-radius:30px;display:inline-flex;align-items:center;gap:6px;font-weight:700;white-space:nowrap}.stock-yes{background:#253b2b;color:#beecac}.stock-no{background:#453029;color:#f0b7a5}.stock-dot{width:5px;height:5px;background:currentColor;border-radius:50%}
+.card h3{font:400 28px 'DM Serif Display',Georgia,serif;margin:13px 0 14px}.card-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:15px;border-top:1px solid #343d35}.price{font-size:21px;color:var(--lime);font-weight:800}.card-link{font-size:19px;color:var(--muted)}
+.footer{display:flex;justify-content:space-between;gap:20px;padding:25px 0 35px;border-top:1px solid var(--line);color:#889388;letter-spacing:.14em;font-size:9px;font-weight:700}
+@media(max-width:800px){.header-edition{display:none}.header-availability{margin-left:auto}.hero{grid-template-columns:1fr}.hero-copy{padding:50px 0 36px}.hero-sculpture{margin:0 0 28px;min-height:270px}.hero-sculpture>span{font-size:210px}.cards{gap:14px}.card-art{height:145px}.item-count{display:none}.footer span:last-child{display:none}}
+@media(max-width:540px){.store{padding:0 5%}.site-header{min-height:70px}.brand{font-size:17px}.header-availability{font-size:8px}.hero-copy h1{font-size:60px}.hero-sculpture{min-height:250px}.cards{grid-template-columns:1fr}.card-art{height:190px}.footer{font-size:8px}}

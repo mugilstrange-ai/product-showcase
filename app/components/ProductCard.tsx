@@ -1,16 +1,34 @@
-// TODO 1: Declare a props type with:
-//           title: string; price: number; inStock: boolean;
-// TODO 2: Give this component a typed, destructured parameter:
-//           ({ title, price, inStock }: Props)
-// TODO 3: Render the props inside the JSX with curly braces.
-//         Tip: reuse your <PriceTag /> for the price, and show
-//         "In stock" / "Sold out" based on inStock.
+import PriceTag from "./PriceTag";
 
-export default function ProductCard() {
+type Props = {
+  title: string;
+  price: number;
+  inStock: boolean;
+};
+
+export default function ProductCard({ title, price, inStock }: Props) {
   return (
-    <div className="card">
-      <h3 className="todo">TODO: product title</h3>
-      <p className="todo">show price + stock status</p>
-    </div>
+    <article className="card">
+      <div className="card-art" aria-hidden="true">
+        <div className="art-orbit art-orbit-one" />
+        <div className="art-orbit art-orbit-two" />
+        <div className="art-core">✳</div>
+        <span className="art-label">CURATED / 001</span>
+      </div>
+      <div className="card-content">
+        <div className="card-topline">
+          <span className="card-kicker">THE ESSENTIALS</span>
+          <span className={inStock ? "stock stock-yes" : "stock stock-no"}>
+            <span className="stock-dot" aria-hidden="true" />
+            {inStock ? "In stock" : "Sold out"}
+          </span>
+        </div>
+        <h3>{title}</h3>
+        <div className="card-bottom">
+          <PriceTag amount={price} />
+          <span className="card-link" aria-hidden="true">↗</span>
+        </div>
+      </div>
+    </article>
   );
 }
