@@ -1,0 +1,46 @@
+name: Verify filterable list and take real browser screenshots
+on:
+  push:
+    branches: [assignment/filterable-list-proof]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    defaults:
+      run:
+        working-directory: assignments/filterable-list
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install packages
+        run: npm install --no-audit --no-fund
+      - name: TypeScript zero-error check
+        run: npm run typecheck
+      - name: Production Next.js build
+        run: npm run build
+      - name: Start actual Next.js server at localhost:3000
+        run: |
+          npm run start > /tmp/filterable-list.log 2>&1 &
+          for n in $(seq 1 35); do
+            if curl -fsS http://localhost:3000/ > /dev/null; then exit 0; fi
+            sleep 2
+          done
+          cat /tmp/filterable-list.log
+          exit 1
+      - name: Install browser-testing library
+        run: npm install --no-save --no-package-lock --no-audit --no-fund playwright-core@1.56.1
+      - name: Test live search, empty state, and capture screenshots
+        run: |
+          export CHROME_PATH="$(command -v google-chrome || command -v chromium)"
+          node scripts/verify-and-capture.mjs
+      - name: Upload actual screenshots and results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: filterable-list-screenshots
+          path: assignments/filterable-list/evidence/
+          retention-days: 30
