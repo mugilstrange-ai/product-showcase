@@ -1,0 +1,62 @@
+name: Item detail route — verify and screenshot
+on:
+  push:
+    branches: [assignment/item-detail-route-proof]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: assignments/item-detail-route
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install app dependencies
+        run: npm install --no-audit --no-fund
+      - name: TypeScript strict check
+        run: npm run typecheck
+      - name: Build production Next.js application
+        run: npm run build
+      - name: Start production server at localhost:3000
+        run: |
+          npm run start >/tmp/item-detail-server.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:3000/posts/1 >/dev/null; then exit 0; fi
+            sleep 2
+          done
+          cat /tmp/item-detail-server.log
+          exit 1
+      - name: Install Playwright browser driver
+        run: npm install --no-save --no-package-lock --no-audit --no-fund playwright-core@1.56.1
+      - name: Test real routes and capture code screenshot
+        run: |
+          export CHROME_PATH="$(command -v google-chrome || command -v chromium)"
+          node scripts/verify-and-capture.mjs
+      - name: Capture actual Chrome window with /posts/1 in address bar
+        run: |
+          mkdir -p evidence
+          if ! command -v scrot >/dev/null 2>&1; then
+            sudo apt-get update -qq && sudo apt-get install -y -qq scrot
+          fi
+          Xvfb :97 -screen 0 1450x1000x24 >/tmp/postmark-xvfb.log 2>&1 &
+          sleep 2
+          export DISPLAY=:97
+          CHROME="$(command -v google-chrome || command -v chromium)"
+          "$CHROME" --test-type --no-sandbox --no-first-run --no-default-browser-check \
+            --disable-dev-shm-usage --disable-features=MediaRouter \
+            --window-size=1380,920 --window-position=20,10 \
+            --new-window http://127.0.0.1:3000/posts/1 >/tmp/postmark-chrome.log 2>&1 &
+          sleep 6
+          scrot -o evidence/01-running-post-1-with-address-bar.png
+          test -s evidence/01-running-post-1-with-address-bar.png
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: item-detail-route-real-screenshots
+          path: assignments/item-detail-route/evidence/
+          retention-days: 30
