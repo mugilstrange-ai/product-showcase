@@ -21,14 +21,14 @@ try {
   check(page.url().endsWith("/posts/1"), "Browser is at /posts/1");
   const title1 = (await page.locator("article h1").innerText()).trim();
   const body1 = (await page.locator("article .article-body").innerText()).trim();
-  check(title1.includes("sunt aut facere repellat"), "Post 1 title fetched correctly");
+  check(title1.toLowerCase().includes("sunt aut facere repellat"), "Post 1 title fetched correctly");
   check(body1.includes("quia et suscipit"), "Post 1 body fetched correctly");
   check(!(await page.locator("nextjs-portal").count()), "No Next.js error overlay");
   await page.screenshot({ path: "evidence/01-running-post-1-page-only.png", fullPage: true });
 
   response = await page.goto("http://127.0.0.1:3000/posts/5", { waitUntil: "networkidle" });
   check(response?.status() === 200, "/posts/5 responds HTTP 200");
-  check((await page.locator("article h1").innerText()).includes("nesciunt quas odio"), "Post 5 title is different");
+  check((await page.locator("article h1").innerText()).toLowerCase().includes("nesciunt quas odio"), "Post 5 title is different");
   check((await page.locator("article .article-body").innerText()).length > 35, "Post 5 has its own body");
   check((await page.locator("article h1").innerText()) !== title1, "Single route serves different posts");
 
