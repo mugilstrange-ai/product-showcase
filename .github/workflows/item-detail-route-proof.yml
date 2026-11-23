@@ -50,7 +50,7 @@ jobs:
           "$CHROME" --test-type --no-sandbox --no-first-run --no-default-browser-check \
             --disable-dev-shm-usage --disable-features=MediaRouter \
             --window-size=1380,920 --window-position=20,10 \
-            --new-window http://127.0.0.1:3000/posts/1 >/tmp/postmark-chrome.log 2>&1 &
+            --new-window http://localhost:3000/posts/1 >/tmp/postmark-chrome.log 2>&1 &
           sleep 6
           scrot -o evidence/01-running-post-1-with-address-bar.png
           test -s evidence/01-running-post-1-with-address-bar.png
